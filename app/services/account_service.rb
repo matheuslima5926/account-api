@@ -9,7 +9,7 @@ class AccountService
         when "transfer"
             return transfer(process_payload[:origin],process_payload[:amount],process_payload[:destination])
         when "withdraw"
-            return withdraw()
+            return withdraw(process_payload[:origin], process_payload[:amount])
         end
     end
 
@@ -45,7 +45,14 @@ class AccountService
     end
 
     def self.withdraw(origin, amount)
-        
+        account = @accounts.select{ |item| item[:id].eql? origin }.first
+        if account.present?
+            if account[:balance] >= amount
+                account[:balance] -= amount
+                return {completed: true, event_data: {origin: account}} 
+            end
+        end
+        {completed: false}
     end
 
     private

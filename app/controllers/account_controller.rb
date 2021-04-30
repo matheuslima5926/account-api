@@ -20,6 +20,6 @@ class AccountController < ApplicationController
 
     private
     def event_params
-        params.permit(:account_id, :type, :transfer, :origin, :amount, :destination)
+        params.permit(:account_id, :id, :type, :transfer, :origin, :amount, :destination)
     end
 end
