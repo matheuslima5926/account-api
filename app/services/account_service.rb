@@ -12,14 +12,15 @@ class AccountService
     end
 
     def self.deposit(destination_account, amount)
-        if @accounts.blank?
+        account = @accounts.select { |item| item[:id].eql? destination_account }.first
+        if !account.blank?
+            account[:balance] += amount
+            return {created: true, event_data: {destination: account}}
+        else
             account = {:id => destination_account, :balance => amount}
             @accounts.push({:id => destination_account, :balance => amount})
             return {created: true, event_data: {destination: account}}
         end
-            account = @accounts.select { |item| item[:id].eql? destination_account }.first
-            account[:balance] += amount
-            return {created: true, event_data: {destination: account}}
     end
 
     def self.balance(account_id)
