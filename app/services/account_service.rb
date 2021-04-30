@@ -41,5 +41,5 @@ class AccountService
         end
     end
     private
-        @accounts = []
+        @accounts = [{:id => 300, :balance => 0}]
 end
