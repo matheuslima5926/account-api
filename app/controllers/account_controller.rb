@@ -3,6 +3,8 @@ class AccountController < ApplicationController
         @request = AccountService.process_event(event_params)
         if @request[:created]
             return render json: @request[:event_data], status: :created
+        else
+            return render json: 0, status: :not_found
         end
         
     end
@@ -12,7 +14,7 @@ class AccountController < ApplicationController
         if @balance.present?
             return render json: @balance, status: :ok
         else
-            return render json: 0, status: 404
+            return render json: 0, status: :not_found
         end
 
     end

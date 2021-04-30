@@ -6,6 +6,8 @@ class AccountService
             return deposit(process_payload[:destination], process_payload[:amount])
         when "balance"
             return balance(process_payload[:account_id])
+        when "transfer"
+            return transfer(process_payload[:origin],process_payload[:amount],process_payload[:destination])
         end
     end
 
@@ -26,6 +28,17 @@ class AccountService
         return nil     
     end
 
-    private 
+    def self.transfer(origin, amount, destination)
+        origin_account = @accounts.select{ |item| item[:id].eql? origin }.first
+        destination_account = @accounts.select{ |item| item[:id].eql? destination }.first
+        if origin_account.present? && destination_account.present?
+            if origin_account[:balance] >= amount
+                origin_account[:balance] -= amount
+                destination_account[:balance] += amount
+                return {completed: true, event_data: {origin: origin_account, destination: destination_account}}
+            end
+        end
+    end
+    private
         @accounts = []
 end
