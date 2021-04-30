@@ -1,7 +1,7 @@
 class AccountController < ApplicationController
     def event
         @request = AccountService.process_event(event_params)
-        if @request[:created]
+        if @request[:completed]
             return render json: @request[:event_data], status: :created
         else
             return render json: 0, status: :not_found
@@ -16,7 +16,6 @@ class AccountController < ApplicationController
         else
             return render json: 0, status: :not_found
         end
-
     end
 
     private

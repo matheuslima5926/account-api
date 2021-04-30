@@ -8,6 +8,8 @@ class AccountService
             return balance(process_payload[:account_id])
         when "transfer"
             return transfer(process_payload[:origin],process_payload[:amount],process_payload[:destination])
+        when "withdraw"
+            return withdraw()
         end
     end
 
@@ -15,11 +17,11 @@ class AccountService
         account = @accounts.select { |item| item[:id].eql? destination_account }.first
         if !account.blank?
             account[:balance] += amount
-            return {created: true, event_data: {destination: account}}
+            return {completed: true, event_data: {destination: account}}
         else
             account = {:id => destination_account, :balance => amount}
             @accounts.push({:id => destination_account, :balance => amount})
-            return {created: true, event_data: {destination: account}}
+            return {completed: true, event_data: {destination: account}}
         end
     end
 
@@ -39,7 +41,13 @@ class AccountService
                 return {completed: true, event_data: {origin: origin_account, destination: destination_account}}
             end
         end
+        return {completed: false}
     end
+
+    def self.withdraw(origin, amount)
+        
+    end
+
     private
-        @accounts = [{:id => 300, :balance => 0}]
+        @accounts = [{:id => "300", :balance => 0}]
 end
