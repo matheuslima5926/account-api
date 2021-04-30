@@ -4,6 +4,8 @@ class AccountService
         case process_payload[:type]
         when "deposit"
             return deposit(process_payload[:destination], process_payload[:amount])
+        when "balance"
+            return balance(process_payload[:account_id])
         end
     end
 
@@ -16,7 +18,12 @@ class AccountService
             account = @accounts.select { |item| item[:id].eql? destination_account }.first
             account[:balance] += amount
             return {created: true, event_data: {destination: account}}
-        
+    end
+
+    def self.balance(account_id)
+        account = @accounts.select { |item| item[:id].eql? account_id }.first
+        return account[:balance] if account.present?
+        return nil     
     end
 
     private 

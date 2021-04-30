@@ -8,6 +8,13 @@ class AccountController < ApplicationController
     end
 
     def balance
+        @balance = AccountService.process_event({type: "balance", account_id: event_params[:account_id]})
+        if @balance.present?
+            return render json: @balance, status: :ok
+        else
+            return render json: 0, status: 404
+        end
+
     end
 
     private
